@@ -6,7 +6,7 @@ const router = express.Router();
 // @route   GET /api/users
 // @desc    Get all users
 // @access  Private (Principal)
-router.get('/', auth, authorize('Principal'), getAllUsers);
+router.get('/', auth, authorize('Principal', 'Teacher'), getAllUsers);
 
 // @route   GET /api/users/:id
 // @desc    Get user by ID

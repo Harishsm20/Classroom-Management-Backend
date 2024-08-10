@@ -1,8 +1,9 @@
 const express = require('express');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
 const classroomRoutes = require('./routes/classroomRoutes');
-// const timetableRoutes = require('./routes/timetableRoutes'); // Add this if you have timetable routes
+const timetableRoutes = require('./routes/timetableRoutes');
 const cors = require('cors');
 require('dotenv').config();
 
@@ -18,8 +19,10 @@ app.use(cors({
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/classrooms', classroomRoutes);
-// app.use('/api/timetable', timetableRoutes); // Add this if you have timetable routes
+app.use('/api/timetable', timetableRoutes);
+
 
 const PORT = process.env.PORT || 5000;
 

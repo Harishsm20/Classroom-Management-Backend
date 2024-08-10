@@ -3,12 +3,18 @@ const User = require('../models/user');
 // Get all users
 exports.getAllUsers = async (req, res) => {
     try {
-        const users = await User.find();
+        const role = req.query.role;
+
+        const query = role ? { role } : {};
+        const users = await User.find(query);
+
         res.json(users);
-    } catch (err) {
-        res.status(500).send('Server error');
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send('Server Error');
     }
 };
+
 
 // Get a single user
 exports.getUser = async (req, res) => {
