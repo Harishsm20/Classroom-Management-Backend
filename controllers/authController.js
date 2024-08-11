@@ -1,10 +1,11 @@
 const User = require('../models/user');
+const Classroom = require('../models/classroom')
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 // Signup
 exports.signup = async (req, res) => {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, classroom } = req.body;
 
     try {
         let user = await User.findOne({ email });
@@ -16,7 +17,8 @@ exports.signup = async (req, res) => {
             name,
             email,
             password,
-            role
+            role,
+            classroom
         });
 
         await user.save();
@@ -24,7 +26,8 @@ exports.signup = async (req, res) => {
         const payload = {
             user: {
                 id: user.id,
-                role: user.role
+                role: user.role,
+                classroom: user.classroom 
             }
         };
 
@@ -58,10 +61,17 @@ exports.login = async (req, res) => {
             return res.status(400).json({ msg: 'Invalid Credentials' });
         }
 
+        // Fetch user's assigned classroom if applicable
+        const classroom = user.role === 'Teacher' && user.classroom
+            ? await Classroom.findById(user.classroom).populate('classTeacher')
+            : null;
+
         const payload = {
             user: {
                 id: user.id,
-                role: user.role
+                role: user.role,
+                classroom: user.classroom,
+                classTeacher: classroom ? classroom.classTeacher : null
             }
         };
 

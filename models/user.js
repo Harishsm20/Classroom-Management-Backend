@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const Schema = mongoose.Schema;
 
-const UserSchema = new mongoose.Schema({
+const UserSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -17,12 +18,12 @@ const UserSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['Principal', 'Teacher', 'Student'],
-        required: true
+        required: true,
+        enum: ['Principal', 'Teacher', 'Student']
     },
     classroom: {
-        type: String,
-        required: function() { return this.role === 'Student'; }
+        type: String,  
+        required: false
     }
 });
 

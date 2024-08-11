@@ -22,9 +22,10 @@ exports.createClassroom = async (req, res) => {
 // Get all classrooms
 exports.getAllClassrooms = async (req, res) => {
     try {
-        const classrooms = await Classroom.find().populate('teacher').populate('students');
+        const classrooms = await Classroom.find();
         res.json(classrooms);
     } catch (err) {
+        console.error(err.message);
         res.status(500).send('Server error');
     }
 };

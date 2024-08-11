@@ -1,34 +1,67 @@
 const Timetable = require('../models/timetable');
-
+const Classroom = require('../models/classroom');
+const User = require('../models/user');
 // Create a new timetable entry
 exports.createTimetable = async (req, res) => {
-    console.log("req.user:", req.user);
-    const { day, startTime, endTime, subject, classroom } = req.body;
-    const teacher = req.user.id; 
-
+    console.log(`req.user: ${req.user}`);
+    const { subject, startTime, endTime, day } = req.body;
     try {
-        if (!day || !startTime || !endTime || !subject || !teacher || !classroom) {
-            console.log("Missing fields");
-            return res.status(400).json({ msg: 'Please provide all required fields' });
+        const user = req.user;
+        const classroom = await Classroom.findById(user.classroom);
+        console.log(`Classroom: ${classroom}`);
+        if (!classroom) {
+            return res.status(404).json({ msg: 'Classroom not found' });
         }
 
+        // Check if the user is assigned as a teacher to this classroom
+        if (user.role === 'Teacher' && user.classroom.toString() !== classroom._id.toString()) {
+            return res.status(403).json({ msg: 'Unauthorized' });
+        }
+
+        // Create timetable
         const newTimetable = new Timetable({
-            day,
+            subject,
             startTime,
             endTime,
-            subject,
-            teacher,
-            classroom
+            day,
+            classroom: user.classroom
         });
 
         await newTimetable.save();
-        res.status(201).json(newTimetable);
-    } catch (error) {
-        console.error('Error creating timetable:', error.message);
-        res.status(500).json({ msg: 'Server error' });
+        res.json(newTimetable);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
     }
 };
 
+exports.assignSubject = async (req, res) =>{
+    const { subject, teacherId, classroomId } = req.body;
+
+    try {
+        const classroom = await Classroom.findById(classroomId);
+        if (!classroom) {
+            return res.status(404).json({ msg: 'Classroom not found' });
+        }
+
+        const teacher = await User.findById(teacherId);
+        if (!teacher) {
+            return res.status(404).json({ msg: 'Teacher not found' });
+        }
+
+        // Create or update timetable with the subject and teacher assignment
+        const timetable = await Timetable.findOneAndUpdate(
+            { subject, classroom: classroomId },
+            { teacher: teacherId },
+            { new: true, upsert: true }  // Create if not exists
+        );
+
+        res.json(timetable);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+}
 
 // Get all timetable entries
 exports.getAllTimetables = async (req, res) => {

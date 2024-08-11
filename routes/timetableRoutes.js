@@ -8,6 +8,7 @@ const timetableController = require('../controllers/timetableController');
 // @access  Private (or Admin if role-based access is implemented)
 router.post('/', timetableController.createTimetable);
 router.post('/create-timetable', auth, authorize('Teacher'), timetableController.createTimetable);
+router.post('/assign-subject', auth , authorize('Teacher'), timetableController.assignSubject)
 
 // @route   GET /api/timetable
 // @desc    Get all timetable entries

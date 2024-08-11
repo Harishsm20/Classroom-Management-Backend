@@ -17,15 +17,17 @@ const TimetableSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    teacher: {
+    classroom: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Classroom',
         required: true
     },
-    classroom: {
-        type: String,
-        required: true
+    teacher: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     }
 });
 
-module.exports = Timetable = mongoose.model('timetable', TimetableSchema);
+
+const Timetable = mongoose.model('timetable', TimetableSchema);
+module.exports = Timetable;
