@@ -60,18 +60,19 @@ exports.getUser = async (req, res) => {
 // Update user
 exports.updateUser = async (req, res) => {
     try {
-        const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!user) return res.status(404).json({ msg: 'User not found' });
-        res.json(user);
-    } catch (err) {
-        res.status(500).send('Server error');
+        const { id } = req.params;
+        const updatedData = req.body;
+        const user = await User.findByIdAndUpdate(id, updatedData, { new: true });
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ error: 'Error updating user' });
     }
 };
 
 // Delete user
 exports.deleteUser = async (req, res) => {
     try {
-        const user = await User.findByIdAndRemove(req.params.id);
+        const user = await User.findByIdAndDelete(req.params.id);
         if (!user) return res.status(404).json({ msg: 'User not found' });
         res.json({ msg: 'User deleted' });
     } catch (err) {
