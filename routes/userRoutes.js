@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllUsers, getUser, updateUser, deleteUser, createUser } = require('../controllers/userController');
+const { getAllUsers, getUser, updateUser, deleteUser, createUser, getUsersByRole } = require('../controllers/userController');
 const { auth, authorize } = require('../middleware/authMiddleware');
 const router = express.Router();
 
@@ -12,6 +12,8 @@ router.post('/create', auth, authorize('Principal'), createUser);
 // @desc    Get all users
 // @access  Private (Principal)
 router.get('/', auth, authorize('Principal', 'Teacher'), getAllUsers);
+
+router.get('/getUserByRole', getUsersByRole);
 
 // @route   GET /api/users/:id
 // @desc    Get user by ID

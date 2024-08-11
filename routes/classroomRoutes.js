@@ -6,8 +6,11 @@ const {
     updateClassroom, 
     deleteClassroom, 
     assignTeacher, 
-    assignStudent 
+    assignStudent,
+    getClassroomByTeacherId ,
+    getStudentsByClassroom
 } = require('../controllers/classroomController');
+
 const { auth, authorize } = require('../middleware/authMiddleware');
 const router = express.Router();
 
@@ -25,6 +28,7 @@ router.get('/', auth, getAllClassrooms);
 // @desc    Get classroom by ID
 // @access  Private
 router.get('/:id', auth, getClassroom);
+// router.get('/getClass', auth, getClassroom);
 
 // @route   PUT /api/classrooms/:id
 // @desc    Update classroom
@@ -45,5 +49,9 @@ router.post('/assign-teacher', auth, authorize('Principal'), assignTeacher);
 // @desc    Assign a student to a classroom
 // @access  Private (Principal)
 router.post('/assign-student', auth, authorize('Principal'), assignStudent);
+
+router.get('/teacher/:teacherId', auth, getClassroomByTeacherId);
+
+router.get('/students', auth, getStudentsByClassroom);
 
 module.exports = router;

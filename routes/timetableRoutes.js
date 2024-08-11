@@ -6,7 +6,7 @@ const timetableController = require('../controllers/timetableController');
 // @route   POST /api/timetable
 // @desc    Create a new timetable entry
 // @access  Private (or Admin if role-based access is implemented)
-router.post('/', timetableController.createTimetable);
+// router.post('/', timetableController.createTimetable);
 router.post('/create-timetable', auth, authorize('Teacher'), timetableController.createTimetable);
 router.post('/assign-subject', auth , authorize('Teacher'), timetableController.assignSubject)
 
@@ -14,6 +14,8 @@ router.post('/assign-subject', auth , authorize('Teacher'), timetableController.
 // @desc    Get all timetable entries
 // @access  Public or Private
 router.get('/', timetableController.getAllTimetables);
+
+router.get('/getClassTimetable', auth,timetableController.getTimetableByClassroom);
 
 // @route   GET /api/timetable/:id
 // @desc    Get a timetable entry by ID

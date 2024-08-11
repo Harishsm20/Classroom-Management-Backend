@@ -21,7 +21,7 @@ app.use(cors({
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/classrooms', classroomRoutes);
-app.use('/api/timetable', timetableRoutes);
+app.use('/api/timetables', timetableRoutes);
 
 
 const PORT = process.env.PORT || 5000;

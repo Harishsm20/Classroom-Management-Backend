@@ -3,9 +3,10 @@ const Schema = mongoose.Schema;
 
 const ClassroomSchema = new Schema({
     name: {
-        type: String,
-        required: true
+        type: String, 
+        required: true 
     },
+
     startTime: {
         type: String,
         required: true
@@ -18,10 +19,10 @@ const ClassroomSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    students: [{
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-    }]
+    students: [{ 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User' 
+    }],
 });
 
 

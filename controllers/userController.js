@@ -78,3 +78,46 @@ exports.deleteUser = async (req, res) => {
         res.status(500).send('Server error');
     }
 };
+
+// Get users by role
+exports.getUsersByRole = async (req, res) => {
+    const { role } = req.query;
+
+    try {
+        const users = await User.find({ role });
+        res.json(users);
+    } catch (err) {
+        console.error('Error fetching users:', err.message);
+        res.status(500).json({ msg: 'Server error' });
+    }
+};
+
+// Get students by classroom ID
+exports.getStudentsByClassroom = async (req, res) => {
+    try {
+        const classroomId = req.query.classroom;
+        if (!classroomId) {
+            console.log('No classroom ID provided');
+            return res.status(400).json({ error: 'Classroom ID is required' });
+        }
+
+        // Fetch classroom and populate students field
+        const classroom = await Classroom.findById(classroomId).populate('students');
+        if (!classroom) {
+            console.log('Classroom not found:', classroomId);
+            return res.status(404).json({ error: 'Classroom not found' });
+        }
+
+        // Extract student IDs from the classroom
+        const studentIds = classroom.students.map(student => student._id);
+
+        // Fetch student details from User model
+        const students = await User.find({ _id: { $in: studentIds } });
+
+        res.json(students);
+    } catch (error) {
+        console.error('Error fetching students:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+

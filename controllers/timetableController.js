@@ -1,40 +1,44 @@
 const Timetable = require('../models/timetable');
 const Classroom = require('../models/classroom');
 const User = require('../models/user');
+
 // Create a new timetable entry
 exports.createTimetable = async (req, res) => {
-    console.log(`req.user: ${req.user}`);
-    const { subject, startTime, endTime, day } = req.body;
+    console.log(`req.body: ${JSON.stringify(req.body, null, 2)}`);
+    const { subject, startTime, endTime, day, classroomId } = req.body;
     try {
         const user = req.user;
-        const classroom = await Classroom.findById(user.classroom);
-        console.log(`Classroom: ${classroom}`);
+        const classroom = await Classroom.findById(classroomId);
+
         if (!classroom) {
             return res.status(404).json({ msg: 'Classroom not found' });
         }
 
-        // Check if the user is assigned as a teacher to this classroom
-        if (user.role === 'Teacher' && user.classroom.toString() !== classroom._id.toString()) {
-            return res.status(403).json({ msg: 'Unauthorized' });
+        if (user.role === 'Teacher' && user._id.toString() !== classroom.teacher?.toString()) {
+            return res.status(403).json({ msg: 'Unauthorized: You are not the assigned teacher for this classroom' });
         }
 
-        // Create timetable
         const newTimetable = new Timetable({
             subject,
             startTime,
             endTime,
             day,
-            classroom: user.classroom
+            classroom: classroom._id,
+            teacher: user._id
         });
 
+        // Attempt to save the new timetable
         await newTimetable.save();
+        console.log('Timetable created successfully:', newTimetable);
         res.json(newTimetable);
+
     } catch (err) {
-        console.error(err.message);
+        console.error('Error creating timetable:', err.message);
         res.status(500).send('Server error');
     }
 };
 
+    
 exports.assignSubject = async (req, res) =>{
     const { subject, teacherId, classroomId } = req.body;
 
@@ -130,5 +134,24 @@ exports.deleteTimetable = async (req, res) => {
     } catch (error) {
         console.error(error.message);
         res.status(500).send('Server error');
+    }
+};
+
+// Get timetable by classroom ID
+exports.getTimetableByClassroom = async (req, res) => {
+    try {
+        const { classroom } = req.query;
+
+        // Find timetables associated with the classroom ID
+        const timetable = await Timetable.find({ classroom });
+
+        if (!timetable) {
+            return res.status(404).json({ message: 'Timetable not found for this classroom' });
+        }
+
+        res.json(timetable);
+    } catch (error) {
+        console.error('Error fetching timetable:', error);
+        res.status(500).json({ message: 'Server error' });
     }
 };
