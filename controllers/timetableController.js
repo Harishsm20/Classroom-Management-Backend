@@ -2,12 +2,13 @@ const Timetable = require('../models/timetable');
 
 // Create a new timetable entry
 exports.createTimetable = async (req, res) => {
+    console.log("req.user:", req.user);
     const { day, startTime, endTime, subject, classroom } = req.body;
     const teacher = req.user.id; 
 
     try {
         if (!day || !startTime || !endTime || !subject || !teacher || !classroom) {
-            console.log("Missing");
+            console.log("Missing fields");
             return res.status(400).json({ msg: 'Please provide all required fields' });
         }
 
@@ -27,8 +28,6 @@ exports.createTimetable = async (req, res) => {
         res.status(500).json({ msg: 'Server error' });
     }
 };
-
-
 
 
 // Get all timetable entries
