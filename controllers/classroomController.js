@@ -119,7 +119,7 @@ exports.getClassroomByTeacherId = async (req, res) => {
 
         // Find the classroom where the teacher is assigned
         const classroom = await Classroom.findOne({ teacher: teacherId }).populate('students');
-        
+                
         if (!classroom) {
             return res.status(404).json({ message: 'Classroom not found for this teacher' });
         }
@@ -163,3 +163,17 @@ exports.getStudentsByClassroom = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+
+exports.getStudentClassroom = async (req, res) =>{
+    try {
+        const studentId = req.params.id;
+        const classroom = await Classroom.findOne({ students: studentId });
+        if (!classroom) {
+            return res.status(404).json({ msg: 'Classroom not found' });
+        }
+        res.json(classroom);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send('Server error');
+    }
+}

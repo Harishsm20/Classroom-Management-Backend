@@ -1,6 +1,7 @@
 const Timetable = require('../models/timetable');
 const Classroom = require('../models/classroom');
 const User = require('../models/user');
+const mongoose = require('mongoose');
 
 // Create a new timetable entry
 exports.createTimetable = async (req, res) => {
@@ -57,7 +58,7 @@ exports.assignSubject = async (req, res) =>{
         const timetable = await Timetable.findOneAndUpdate(
             { subject, classroom: classroomId },
             { teacher: teacherId },
-            { new: true, upsert: true }  // Create if not exists
+            { new: true, upsert: true }
         );
 
         res.json(timetable);
@@ -155,3 +156,26 @@ exports.getTimetableByClassroom = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+exports.getTimetableFromClassroom = async (req, res) =>{
+    try {
+        const classId = req.params.id;
+
+        const timetable = await Timetable.find({classroom: classId});
+        if (!timetable || timetable.length == 0) {
+            console.log("No timetable")
+            return res.status(404).json({ message: 'Timetable not found for this classroom' });
+        }
+
+        console.log('Timetable found:', timetable);
+
+        if (timetable.length === 0) {
+            return res.status(404).json({ msg: 'No timetable found for this classroom' });
+        }
+
+        res.json(timetable);
+    } catch (error) {
+        console.error('Error fetching timetable:', error.message);
+        res.status(500).send('Server error');
+    }
+}

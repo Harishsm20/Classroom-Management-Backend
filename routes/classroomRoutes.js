@@ -8,7 +8,8 @@ const {
     assignTeacher, 
     assignStudent,
     getClassroomByTeacherId ,
-    getStudentsByClassroom
+    getStudentsByClassroom,
+    getStudentClassroom
 } = require('../controllers/classroomController');
 
 const { auth, authorize } = require('../middleware/authMiddleware');
@@ -53,5 +54,7 @@ router.post('/assign-student', auth, authorize('Principal'), assignStudent);
 router.get('/teacher/:teacherId', auth, getClassroomByTeacherId);
 
 router.get('/students', auth, getStudentsByClassroom);
+
+router.get('/student/:id', auth, getStudentClassroom);
 
 module.exports = router;
