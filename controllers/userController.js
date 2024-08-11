@@ -1,5 +1,33 @@
 const User = require('../models/user');
 
+// Create a new user
+exports.createUser = async (req, res) => {
+    const { name, email, password, role, classroom } = req.body;
+
+    try {
+        // Check for existing user
+        let user = await User.findOne({ email });
+        if (user) {
+            return res.status(400).json({ msg: 'User already exists' });
+        }
+
+        // Create a new user
+        user = new User({
+            name,
+            email,
+            password,
+            role,
+            classroom: role === 'Student' ? classroom : undefined, // Assign classroom only for students
+        });
+
+        await user.save();
+        res.status(201).json(user);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send('Server Error');
+    }
+};
+
 // Get all users
 exports.getAllUsers = async (req, res) => {
     try {

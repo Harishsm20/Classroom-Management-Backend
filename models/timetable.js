@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-const timetableSchema = new mongoose.Schema({
-    day: {
+const TimetableSchema = new mongoose.Schema({
+    subject: {
         type: String,
         required: true
     },
@@ -13,13 +13,13 @@ const timetableSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    subject: {
+    day: {
         type: String,
         required: true
     },
     teacher: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // assuming teacher's details are stored in User model
+        ref: 'user',
         required: true
     },
     classroom: {
@@ -28,5 +28,4 @@ const timetableSchema = new mongoose.Schema({
     }
 });
 
-const Timetable = mongoose.model('Timetable', timetableSchema);
-module.exports = Timetable;
+module.exports = Timetable = mongoose.model('timetable', TimetableSchema);

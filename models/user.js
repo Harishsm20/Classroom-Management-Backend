@@ -19,6 +19,10 @@ const UserSchema = new mongoose.Schema({
         type: String,
         enum: ['Principal', 'Teacher', 'Student'],
         required: true
+    },
+    classroom: {
+        type: String,
+        required: function() { return this.role === 'Student'; }
     }
 });
 

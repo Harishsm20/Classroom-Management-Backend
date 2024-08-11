@@ -2,7 +2,8 @@ const Timetable = require('../models/timetable');
 
 // Create a new timetable entry
 exports.createTimetable = async (req, res) => {
-    const { day, startTime, endTime, subject, teacher, classroom } = req.body;
+    const { day, startTime, endTime, subject, classroom } = req.body;
+    const teacher = req.user.id; 
 
     try {
         if (!day || !startTime || !endTime || !subject || !teacher || !classroom) {
@@ -26,6 +27,8 @@ exports.createTimetable = async (req, res) => {
         res.status(500).json({ msg: 'Server error' });
     }
 };
+
+
 
 
 // Get all timetable entries

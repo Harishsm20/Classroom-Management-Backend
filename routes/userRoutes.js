@@ -1,7 +1,12 @@
 const express = require('express');
-const { getAllUsers, getUser, updateUser, deleteUser } = require('../controllers/userController');
+const { getAllUsers, getUser, updateUser, deleteUser, createUser } = require('../controllers/userController');
 const { auth, authorize } = require('../middleware/authMiddleware');
 const router = express.Router();
+
+// @route   POST /api/users/create
+// @desc    Create a user (student/teacher)
+// @access  Private (Principal only)
+router.post('/create', auth, authorize('Principal'), createUser);
 
 // @route   GET /api/users
 // @desc    Get all users
