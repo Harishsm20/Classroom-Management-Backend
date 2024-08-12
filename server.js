@@ -12,9 +12,10 @@ const app = express();
 connectDB();
 
 app.use(express.json());
+const originUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
 
 app.use(cors({
-    origin: 'http://localhost:5173'
+    origin: originUrl
 }));
 
 // Routes
