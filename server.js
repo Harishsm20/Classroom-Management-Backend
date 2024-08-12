@@ -14,9 +14,7 @@ connectDB();
 app.use(express.json());
 const originUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
 
-app.use(cors({
-    origin: originUrl
-}));
+app.use(cors());
 
 // Routes
 app.use('/api/auth', authRoutes);
