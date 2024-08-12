@@ -16,6 +16,12 @@ const originUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
 
 app.use(cors());
 
+app.use(cors({
+    origin: 'https://heliverse-classroom-management.netlify.app',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}))
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
