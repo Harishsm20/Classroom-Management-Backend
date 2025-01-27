@@ -12,7 +12,7 @@ const app = express();
 connectDB();
 
 app.use(express.json());
-const originUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+const originUrl = 'http://localhost:5173' || process.env.FRONTEND_URL ;
 
 app.use(cors());
 
@@ -29,6 +29,6 @@ app.use('/api/classrooms', classroomRoutes);
 app.use('/api/timetables', timetableRoutes);
 
 
-const PORT = process.env.PORT || 5000;
+const PORT = 5000 || process.env.PORT;
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

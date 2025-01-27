@@ -20,11 +20,20 @@ const UserSchema = new Schema({
         type: String,
         required: true,
         enum: ['Principal', 'Teacher', 'Student']
-    },
-    classroom: {
-        type: String,  
-        required: false
-    }
+    },  
+    rollNo: {
+        type: String,
+        required: function () {
+          return this.role === "Student"; // Required only for students
+        },
+      },
+      classroom: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Classroom",
+        required: function () {
+          return this.role === "Student"; // Required only for students
+        },
+      },
 });
 
 UserSchema.pre('save', async function (next) {
